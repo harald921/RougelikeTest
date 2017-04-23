@@ -7,20 +7,24 @@ public class Chunk
     /* Fields */
     World _world;
 
-    GameObject _chunkGO;
+    GameObject _gameObject;
+    public GameObject gameObject
+    {
+        get { return _gameObject; }
+    }
 
     /* Base */
     public Chunk(World inWorld)
     {
         _world = inWorld;
 
-        _chunkGO = new GameObject()
+        _gameObject = new GameObject()
         {
             name = "Chunk"
         };
 
-        MeshRenderer renderer = _chunkGO.AddComponent<MeshRenderer>();
-        MeshFilter filter = _chunkGO.AddComponent<MeshFilter>();
+        MeshRenderer renderer = _gameObject.AddComponent<MeshRenderer>();
+        MeshFilter filter = _gameObject.AddComponent<MeshFilter>();
 
         int chunkSize = inWorld.worldGenData.chunkSize;
         int tileCount = chunkSize * chunkSize;
@@ -68,17 +72,20 @@ public class Chunk
 
         int textureSize = chunkSize * 64;
 
-        Color[] newColorMap = new Color[textureSize * textureSize];
+        Color32[] newColorMap = new Color32[textureSize * textureSize];
         for (int y = 0; y < textureSize; y++)
             for (int x = 0; x < textureSize; x++)
+            {
                 newColorMap[y * textureSize + x] = new Color(Random.Range(0.0f,1.0f), Random.Range(0.0f,1.0f), Random.Range(0.0f,1.0f));
+            }
 
         if (!renderer.material.mainTexture)
             renderer.material.mainTexture = new Texture2D(textureSize, textureSize);
 
+        renderer.material.shader = Shader.Find("Mobile/Diffuse");
         ((Texture2D)renderer.material.mainTexture).filterMode = FilterMode.Point;
         ((Texture2D)renderer.material.mainTexture).wrapMode = TextureWrapMode.Clamp;
-        ((Texture2D)renderer.material.mainTexture).SetPixels(newColorMap);
+        ((Texture2D)renderer.material.mainTexture).SetPixels32(newColorMap);
         ((Texture2D)renderer.material.mainTexture).Apply();
     }
 

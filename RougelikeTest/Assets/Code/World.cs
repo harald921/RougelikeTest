@@ -10,6 +10,8 @@ public class World : MonoBehaviour
         [Header("World Settings")]
         [Range(16,124)]
         public int chunkSize;
+        [Range(32, 64)]
+        public int spriteResolution;
     }
     [SerializeField] WorldGenData _worldGenData;
     public WorldGenData worldGenData
@@ -24,7 +26,42 @@ public class World : MonoBehaviour
     {
         _chunkGenerator = new ChunkGenerator(this);
 
-        _chunkGenerator.GenerateChunk();
+        int chunkSize = worldGenData.chunkSize;
+        for (int i = 0; i < 9; i++)
+        {
+            Chunk newChunk = _chunkGenerator.GenerateChunk();
+
+            switch (i)
+            {
+                case 0:
+                    newChunk.gameObject.transform.position = new Vector3(-chunkSize, chunkSize,0);
+                    break;
+                case 1:
+                    newChunk.gameObject.transform.position = new Vector3(0,          chunkSize, 0);
+                    break;
+                case 2:
+                    newChunk.gameObject.transform.position = new Vector3(chunkSize,  chunkSize, 0);
+                    break;
+                case 3:
+                    newChunk.gameObject.transform.position = new Vector3(-chunkSize, 0, 0);
+                    break;
+                case 4:
+                    newChunk.gameObject.transform.position = new Vector3(0,          0, 0);
+                    break;
+                case 5:
+                    newChunk.gameObject.transform.position = new Vector3(chunkSize,  0, 0);
+                    break;
+                case 6:
+                    newChunk.gameObject.transform.position = new Vector3(-chunkSize, -chunkSize, 0);
+                    break;
+                case 7:
+                    newChunk.gameObject.transform.position = new Vector3(0,          -chunkSize, 0);
+                    break;
+                case 8:
+                    newChunk.gameObject.transform.position = new Vector3(chunkSize,  -chunkSize, 0);
+                    break;
+            }
+        }
     }
 
     void Update()
